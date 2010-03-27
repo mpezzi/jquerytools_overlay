@@ -7,8 +7,6 @@ div.overlay {
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   -moz-box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
-/*  box-shadow: 10px 10px 20px #000;*/
-  
 }
 
 div.overlay div.close {
