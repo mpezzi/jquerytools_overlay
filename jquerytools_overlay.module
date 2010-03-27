@@ -9,7 +9,7 @@ function jquerytools_overlay_theme() {
     'jquerytools_overlay_window' => array('arguments' => array('overlay_id' => NULL, 'content' => NULL), 'template' => 'overlay'),
   );
   
-  // ImageCache Presets
+  // Build ImageCache preset formatters.
   foreach ( imagecache_presets() as $trigger ) {
     foreach ( imagecache_presets() as $window ) {
       $theme['jquerytools_overlay_formatter_'. $trigger['presetname'] .'__'. $window['presetname'] .'_default'] = array(
@@ -28,7 +28,7 @@ function jquerytools_overlay_theme() {
 function theme_jquerytools_overlay($trigger, $content) {
   static $overlays;
   
-  // Set our overlays counter if not set.
+  // Add required css and javascript files, and initialize our overlay counter.
   if ( !isset($overlays) ) {
     drupal_add_css(drupal_get_path('module', 'jquerytools_overlay').'/jquerytools_overlay.css');
     jquerytools_add('overlay', 'a.overlay[rel]');
@@ -64,8 +64,7 @@ function jquerytools_overlay_field_formatter_info() {
 }
 
 function theme_jquerytools_overlay_formatter_default($element) {
-  
-  // Extract preset name from formatter name.
+  // Extract preset names from formatter name.
   $preset = substr($element['#formatter'], 0, strrpos($element['#formatter'], '_'));
   $presets = explode('__', $preset);
   
@@ -74,10 +73,12 @@ function theme_jquerytools_overlay_formatter_default($element) {
     if ( !empty($element[$key]['#item']['fid']) ) {
       $trigger = theme('imagecache', $presets[0], $element[$key]['#item']['filepath']);
       $window = theme('imagecache', $presets[1], $element[$key]['#item']['filepath']);
+      
       $items[] = theme('jquerytools_overlay', $trigger, $window);
     }
   }
   
+  // If we have multiple items display them in an unordered list.
   if ( count($items) > 1 ) {
     return theme('item_list', $items, NULL, 'ul', array('class' => 'jquerytools-overlays clearfix'));
   }
