@@ -1,0 +1,12 @@
+name            = "jQuery Tools Overlay"
+description     = "Provides ability to use jQuery Tools Overlay"
+package         = "User Interface"
+core            = 6.x
+version         = 6.x-1.0
+
+dependencies[]  = content
+dependencies[]  = imagefield
+dependencies[]  = filefield
+dependencies[]  = imagecache
+dependencies[]  = jquerytools
+dependencies[]  = jquery_update

@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * Implementation of hook_theme().
+ */
+function jquerytools_overlay_theme() {
+  $theme = array(
+    'jquerytools_overlay' => array('arguments' => array('trigger' => NULL, 'content' => NULL)),
+    'jquerytools_overlay_window' => array('arguments' => array('overlay_id' => NULL, 'content' => NULL), 'template' => 'overlay'),
+  );
+  
+  // ImageCache Presets
+  foreach ( imagecache_presets() as $trigger ) {
+    foreach ( imagecache_presets() as $window ) {
+      $theme['jquerytools_overlay_formatter_'. $trigger['presetname'] .'__'. $window['presetname'] .'_default'] = array(
+        'arguments' => array('element' => NULL),
+        'function' => 'theme_jquerytools_overlay_formatter_default',
+      );
+    }
+  }
+  
+  return $theme;
+}
+
+/**
+ * Theme jQuery Tools Overlay.
+ */
+function theme_jquerytools_overlay($trigger, $content) {
+  static $overlays;
+  
+  // Set our overlays counter if not set.
+  if ( !isset($overlays) ) {
+    drupal_add_css(drupal_get_path('module', 'jquerytools_overlay').'/jquerytools_overlay.css');
+    jquerytools_add('overlay', 'a.overlay[rel]');
+    $overlays = 0;
+  }
+  
+  $overlays++;
+  
+  $id = "overlay-". $overlays;
+  
+  // Add overlay content to closure region.
+  drupal_set_content('page_closure', theme('jquerytools_overlay_window', $id, $content));
+  
+  return '<a class="overlay" rel="#'. $id .'">'. $trigger .'</a>';
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function jquerytools_overlay_field_formatter_info() {
+  $formatters = array();
+  foreach ( imagecache_presets() as $trigger ) {
+    foreach ( imagecache_presets() as $window ) {
+      $formatters[$trigger['presetname'] .'__'. $window['presetname'] .'_default'] = array(
+        'label' => t('@trigger image with @window overlay', array('@trigger' => $trigger['presetname'], '@window' => $window['presetname'])),
+        'field types' => array('image', 'filefield'),
+        'multiple values' => CONTENT_HANDLE_MODULE,
+      );  
+    }
+  }
+  
+  return $formatters;
+}
+
+function theme_jquerytools_overlay_formatter_default($element) {
+  
+  // Extract preset name from formatter name.
+  $preset = substr($element['#formatter'], 0, strrpos($element['#formatter'], '_'));
+  $presets = explode('__', $preset);
+  
+  $items = array();
+  foreach ( element_children($element) as $key ) {
+    if ( !empty($element[$key]['#item']['fid']) ) {
+      $trigger = theme('imagecache', $presets[0], $element[$key]['#item']['filepath']);
+      $window = theme('imagecache', $presets[1], $element[$key]['#item']['filepath']);
+      $items[] = theme('jquerytools_overlay', $trigger, $window);
+    }
+  }
+  
+  if ( count($items) > 1 ) {
+    return theme('item_list', $items, NULL, 'ul', array('class' => 'jquerytools-overlays clearfix'));
+  }
+  
+  return $items[0];
+}

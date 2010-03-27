@@ -1,0 +1,40 @@
+div.overlay {
+  display: none;
+  position: relative;
+  padding: 20px;
+  background: #000;
+  
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -moz-box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
+/*  box-shadow: 10px 10px 20px #000;*/
+  
+}
+
+div.overlay div.close {
+  display: block;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  background-color: #f00;
+  cursor: pointer;
+}
+
+a.overlay {
+  cursor: pointer;
+}
+
+/***** Multiple Value Fields *****/
+.item-list .jquerytools-overlays {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item-list .jquerytools-overlays li {
+  display: block;
+  float: left;
+  margin: 3px;
+}
