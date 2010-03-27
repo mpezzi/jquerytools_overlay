@@ -1,0 +1,10 @@
+jQueryTools Overlay Drupal Module
+=================================
+
+What does this do?
+------------------
+This module provides a wrapper for the jQueryTools Overlay plugin.  It adds CCK formatters which allows you to choose two ImageCache presets, one for the overlay trigger and one for the overlay window.
+
+Demonstration
+-------------
+[TK]
